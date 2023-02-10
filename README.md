@@ -1,4 +1,4 @@
-# BMAC
+# MACPP
 
 ## Experiment Settings
 
