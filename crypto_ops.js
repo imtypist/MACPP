@@ -2,10 +2,10 @@ const secp256k1 = require('noble-secp256k1');
 var assert = require('assert');
 const crypto = require('crypto');
 const bls = require('@noble/bls12-381');
+const ed25519 = require('@noble/ed25519');
 
 (async () => {
 
-// TM_h
 console.log("----------------------------\nhash operation (SHA256)\n----------------------------")
 let _str = Buffer.from(secp256k1.utils.randomPrivateKey()); // 32 bytes
 let sha256_hash;
@@ -81,16 +81,37 @@ for (let index = 0; index < 5; index++) {
 }
 
 
-let x_sk = secp256k1.utils.randomPrivateKey();
-let x = secp256k1.Point.fromPrivateKey(x_sk);
+let x_sk = ed25519.utils.randomPrivateKey();
+let x = await ed25519.Point.fromPrivateKey(x_sk);
 
-let y_sk = secp256k1.utils.randomPrivateKey();
-let y = secp256k1.Point.fromPrivateKey(y_sk);
+let y_sk = ed25519.utils.randomPrivateKey();
+let y = await ed25519.Point.fromPrivateKey(y_sk);
+
+console.log("\n----------------------------\nECC point multiplication (ed25519)\n----------------------------")
+for (let index = 0; index < 5; index++) {
+	console.time("ECCPM")
+	x.multiply(2n);
+	console.timeEnd("ECCPM")
+}
+
+console.log("\n----------------------------\nECC point addition (ed25519)\n----------------------------")
+for (let index = 0; index < 5; index++) {
+	console.time("ECCPA")
+	x.add(y);
+	console.timeEnd("ECCPA")
+}
+
+
+x_sk = secp256k1.utils.randomPrivateKey();
+x = secp256k1.Point.fromPrivateKey(x_sk);
+
+y_sk = secp256k1.utils.randomPrivateKey();
+y = secp256k1.Point.fromPrivateKey(y_sk);
 
 console.log("\n----------------------------\nECC point multiplication (secp256k1)\n----------------------------")
 for (let index = 0; index < 5; index++) {
 	console.time("ECCPM")
-	x.multiply(BigInt('0x' + Buffer.from(y_sk).toString('hex')));
+	x.multiply(2n);
 	console.timeEnd("ECCPM")
 }
 
@@ -128,8 +149,3 @@ for (let index = 0; index < 3; index++) {
 assert.strictEqual(aliceSecret.toString('hex'), bobSecret.toString('hex'));
 
 })();
-
-// 实验环境
-// - Intel i7-10700K 16GB RAM
-// - Ubuntu 20.04
-// - Nodejs v18.13.0实现
