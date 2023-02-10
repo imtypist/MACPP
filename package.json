@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@noble/bls12-381": "^1.4.0",
+    "@noble/ed25519": "^1.7.3",
+    "noble-secp256k1": "^1.2.14"
+  }
+}
