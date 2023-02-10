@@ -64,10 +64,9 @@ for (let index = 0; index < 5; index++) {
 
 console.log("\n----------------------------\nECC point multiplication (bls12-381)\n----------------------------")
 for (let index = 0; index < 5; index++) {
-	bls_sk = bls.utils.randomPrivateKey();
-	bls_p1 = bls.PointG1.fromPrivateKey(bls_sk);	
+	bls_p1 = bls.PointG1.fromPrivateKey(bls.utils.randomPrivateKey());	
 	console.time("ECCPM")
-	bls_p1.multiply(BigInt('0x' + Buffer.from(bls_sk).toString('hex')));
+	bls_p1.multiply(2n);
 	console.timeEnd("ECCPM")
 }
 
