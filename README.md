@@ -13,3 +13,7 @@
 
 ## DSMT
 
+- `DSMT_time.js`: time cost of SMT and DMST
+- `DSMT_time_eval.log/DSMT_time.csv`: evaluation results
+
+![](DSMT_time.png)
