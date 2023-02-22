@@ -9,11 +9,13 @@
 ## crypto_ops
 
 - `crypto_ops.js`: implementation of used cryptographic operations
-- `crypto_ops_eval.log`: evaluation results
+- `crypto_ops_eval.log`: raw evaluation data
 
 ## DSMT
 
-- `DSMT_time.js`: time cost of SMT and DMST
-- `DSMT_time_eval.log/DSMT_time.csv`: evaluation results
+- `DSMT.js`: time cost and storage cost of SMT and DMST
+- `DSMT_eval.[log|csv]`: raw evaluation data
 
-![](DSMT_time.png)
+![time cost](DSMT_time.png)
+
+![storage size](DSMT_storage.png)

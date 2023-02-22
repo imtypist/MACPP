@@ -8,7 +8,7 @@ const hash_zero = await secp256k1.utils.sha256("0");
 
 const hash_null = null;
 
-var logStream = fs.createWriteStream('DSMT_time_eval.log', {flags: 'w'});
+var logStream = fs.createWriteStream('DSMT_eval.log', {flags: 'w'});
 
 const n_max = 300;
 
@@ -34,6 +34,7 @@ for (const h of h_arr) {
     let pid_arr = []
     // update ops (including add and revoke)
     smt_time = []
+    smt_space = []
     for (let n = 1; n <= n_max; n++) {
         // generate pseudo PIDs
         for (let i = 0; i < n; i++) {
@@ -69,10 +70,20 @@ for (const h of h_arr) {
         t2 = process.uptime()*1000;
         // precise time stat
         smt_time.push(t2-t1);
-
+        
+        let smt_size = 0;
+        for (let x = 0; x < SMT.length; x++) {
+            for (let y = 0; y < SMT[x].length; y++) {
+                if (SMT[x][y] != null) {
+                    smt_size += SMT[x][y].length;
+                }
+            }
+        }
+        smt_space.push(smt_size);
     }
 
     logStream.write("time (ms): " + smt_time.toString() + "\n");
+    logStream.write("storage (bytes): " + smt_space.toString() + "\n");
 }
 
 // 0-9 for DSMT
@@ -81,6 +92,7 @@ h_arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 let pid_arr = []
 // update ops (including add and revoke)
 dsmt_time = []
+dsmt_space = []
 logStream.write("----------------------------\nDSMT\n----------------------------\n");
 for (let n = 1; n <= n_max; n++) {
     // generate pseudo PIDs
@@ -96,7 +108,7 @@ for (let n = 1; n <= n_max; n++) {
                 let nodes = new Array(2**i).fill(hash_null);
                 DSMT.push(nodes);
             }
-            h = hc;
+            h = hc + 1;
             break;
         }
     }
@@ -131,9 +143,20 @@ for (let n = 1; n <= n_max; n++) {
     // precise time stat
     dsmt_time.push(t2-t1);
 
+    let dsmt_size = 0;
+    for (let x = 0; x < DSMT.length; x++) {
+        for (let y = 0; y < DSMT[x].length; y++) {
+            if (DSMT[x][y] != null) {
+                dsmt_size += DSMT[x][y].length;
+            }
+        }
+    }
+    dsmt_space.push(dsmt_size);
+
 }
 
 logStream.write("time (ms): " + dsmt_time.toString() + "\n");
+logStream.write("storage (bytes): " + dsmt_space.toString() + "\n");
 
 logStream.end();
 
