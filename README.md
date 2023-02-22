@@ -19,3 +19,8 @@
 ![time cost](DSMT_time.png)
 
 ![storage size](DSMT_storage.png)
+
+## BAPM
+
+- `BAPM.js`: time cost of PID generation and verification
+- `BAPM_eval.log`: raw evaluation data
