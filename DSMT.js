@@ -8,7 +8,7 @@ const hash_zero = await secp256k1.utils.sha256("0");
 
 const hash_null = null;
 
-var logStream = fs.createWriteStream('DSMT_eval_interval10.log', {flags: 'w'});
+var logStream = fs.createWriteStream('DSMT_eval_interval10.log', {flags: 'a'});
 
 const n_max = 301;
 
