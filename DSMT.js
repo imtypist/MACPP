@@ -8,13 +8,13 @@ const hash_zero = await secp256k1.utils.sha256("0");
 
 const hash_null = null;
 
-var logStream = fs.createWriteStream('DSMT_eval.log', {flags: 'w'});
+var logStream = fs.createWriteStream('DSMT_eval_interval10.log', {flags: 'w'});
 
-const n_max = 300;
+const n_max = 301;
 
 // initialize SMT 2^h nodes
 // 16,20,24 for SMT
-h_arr = [16, 20, 24];
+h_arr = [12, 16, 20, 24];
 
 for (const h of h_arr) {    
     console.log("h =", h);
@@ -69,7 +69,9 @@ for (const h of h_arr) {
 
         t2 = process.uptime()*1000;
         // precise time stat
-        smt_time.push(t2-t1);
+        if (n % 10 == 1) {
+            smt_time.push(t2-t1);   
+        }
         
         let smt_size = 0;
         for (let x = 0; x < SMT.length; x++) {
@@ -79,7 +81,9 @@ for (const h of h_arr) {
                 }
             }
         }
-        smt_space.push(smt_size);
+        if (n % 10 == 1) {
+            smt_space.push(smt_size);
+        }
     }
 
     logStream.write("time (ms): " + smt_time.toString() + "\n");
@@ -141,7 +145,9 @@ for (let n = 1; n <= n_max; n++) {
 
     t2 = process.uptime()*1000;
     // precise time stat
-    dsmt_time.push(t2-t1);
+    if (n % 10 == 1) {
+        dsmt_time.push(t2-t1);
+    }
 
     let dsmt_size = 0;
     for (let x = 0; x < DSMT.length; x++) {
@@ -151,7 +157,9 @@ for (let n = 1; n <= n_max; n++) {
             }
         }
     }
-    dsmt_space.push(dsmt_size);
+    if (n % 10 == 1) {
+        dsmt_space.push(dsmt_size);
+    }
 
 }
 
