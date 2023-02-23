@@ -2,6 +2,7 @@
   "dependencies": {
     "@noble/bls12-381": "^1.4.0",
     "@noble/ed25519": "^1.7.3",
+    "eciesjs": "^0.3.16",
     "noble-secp256k1": "^1.2.14"
   }
 }

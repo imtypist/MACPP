@@ -6,6 +6,12 @@
 - Ubuntu 20.04
 - Nodejs v18.13.0
 
+## Quick Start
+
+```bash
+npm install
+```
+
 ## crypto_ops
 
 - `crypto_ops.js`: implementation of used cryptographic operations
