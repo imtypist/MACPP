@@ -8,7 +8,9 @@ const hash_zero = await secp256k1.utils.sha256("0");
 
 const hash_null = null;
 
-var logStream = fs.createWriteStream('DSMT_eval_interval10.log', {flags: 'a'});
+const if_interval = true
+
+var logStream = if_interval ? fs.createWriteStream('DSMT_eval_interval10.log', {flags: 'w'}) : fs.createWriteStream('DSMT_eval.log', {flags: 'w'});
 
 const n_max = 301;
 
@@ -43,7 +45,7 @@ for (const h of h_arr) {
         
         t1 = process.uptime()*1000;
 
-        for (let i = 0; i < h; i++) {
+        for (let i = 0; i <= h; i++) {
 
             for (let j = 0; j < Math.ceil(n/2**i); j++) {
                 // leaf node update
@@ -52,25 +54,23 @@ for (const h of h_arr) {
                     continue;   
                 }
 
-                // skip even nodes
-                if (j % 2 == 1) {
-                    continue;
-                }
-
                 // normal case
                 let concat_str = [];
-                concat_str.push(SMT[i-1][j]);
-                if (SMT[i-1][j+1] != null) { // in case that the last node is odd
-                    concat_str.push(SMT[i-1][j+1]);
+                concat_str.push(SMT[i-1][2*j]);
+                if (SMT[i-1][2*j+1] != null) { // in case that the last node is odd
+                    concat_str.push(SMT[i-1][2*j+1]);
                 }
-                SMT[i][parseInt(j/2)] = await secp256k1.utils.sha256(Buffer.concat(concat_str).toString('hex'));
+                SMT[i][j] = await secp256k1.utils.sha256(Buffer.concat(concat_str).toString('hex'));
             }
         }
 
         t2 = process.uptime()*1000;
         // precise time stat
-        if (n % 10 == 1) {
+        if (if_interval && n % 10 == 1) {
             smt_time.push(t2-t1);   
+        }
+        if (if_interval == false) {
+            smt_time.push(t2-t1);
         }
         
         let smt_size = 0;
@@ -81,7 +81,10 @@ for (const h of h_arr) {
                 }
             }
         }
-        if (n % 10 == 1) {
+        if (if_interval && n % 10 == 1) {
+            smt_space.push(smt_size);
+        }
+        if (if_interval == false) {
             smt_space.push(smt_size);
         }
     }
@@ -112,15 +115,15 @@ for (let n = 1; n <= n_max; n++) {
                 let nodes = new Array(2**i).fill(hash_null);
                 DSMT.push(nodes);
             }
-            h = hc + 1;
+            h = hc;
             break;
         }
     }
     
     t1 = process.uptime()*1000;
 
-    for (let i = 0; i < h; i++) {
-
+    for (let i = 0; i <= h; i++) {
+        
         for (let j = 0; j < Math.ceil(n/2**i); j++) {
             // leaf node update
             if (i == 0) {
@@ -128,24 +131,23 @@ for (let n = 1; n <= n_max; n++) {
                 continue;   
             }
 
-            // skip even nodes
-            if (j % 2 == 1) {
-                continue;
-            }
-
             // normal case
             let concat_str = [];
-            concat_str.push(DSMT[i-1][j]);
-            if (DSMT[i-1][j+1] != null) { // in case that the last node is odd
-                concat_str.push(DSMT[i-1][j+1]);
+            concat_str.push(DSMT[i-1][2*j]);
+            if (DSMT[i-1][2*j+1] != null) { // in case that the last node is odd
+                concat_str.push(DSMT[i-1][2*j+1]);
             }
-            DSMT[i][parseInt(j/2)] = await secp256k1.utils.sha256(Buffer.concat(concat_str).toString('hex'));
+            
+            DSMT[i][j] = await secp256k1.utils.sha256(Buffer.concat(concat_str).toString('hex'));
         }
     }
 
     t2 = process.uptime()*1000;
     // precise time stat
-    if (n % 10 == 1) {
+    if (if_interval && n % 10 == 1) {
+        dsmt_time.push(t2-t1);
+    }
+    if (if_interval == false) {
         dsmt_time.push(t2-t1);
     }
 
@@ -157,7 +159,10 @@ for (let n = 1; n <= n_max; n++) {
             }
         }
     }
-    if (n % 10 == 1) {
+    if (if_interval && n % 10 == 1) {
+        dsmt_space.push(dsmt_size);
+    }
+    if (if_interval == false) {
         dsmt_space.push(dsmt_size);
     }
 
