@@ -1,0 +1,3 @@
+[submodule "hyperledger-fabric-caliper"]
+	path = hyperledger-fabric-caliper
+	url = https://github.com/imtypist/hyperledger-fabric-caliper
